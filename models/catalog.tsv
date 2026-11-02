@@ -1,26 +1,26 @@
 zoo_directory	archive	tier	license	size_mb	task	url	sha256
 488_DEIMv2-Wholebody49	download	default	Apache-2.0	912	person: body/head/face/hand/keypoints/gender/age/head direction (default node)	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/488_DEIMv2-Wholebody49/resources.tar.gz	5251780d7f75740b3a4bd2ef793613067440a80e89bdd49c0c5baf1b7d3ee601
-471_YOLO-Wholebody34	download	default	MIT	993	person: wholebody detector, YOLO alternative	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/471_YOLO-Wholebody34/resources.tar.gz	
-482_UHD	download	default	MIT	2658	person: ultra-light detector	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/482_UHD/resources.tar.gz	
-502_PersonViT	download	default	Apache-2.0	3042	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/502_PersonViT/resources.tar.gz	
+471_YOLO-Wholebody34	download	default	MIT	993	person: wholebody detector, YOLO alternative	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/471_YOLO-Wholebody34/resources.tar.gz	245d2262378c96e88413a3b84fe6ce4069a1882c01ccdaf39b7a0c9ba017c167
+482_UHD	download	default	MIT	2658	person: ultra-light detector	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/482_UHD/resources.tar.gz	8f172251b4d337377ba8cfab6c7798672fe655823e7f34a4db38feb08c0e71fc
+502_PersonViT	download	default	Apache-2.0	3042	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/502_PersonViT/resources.tar.gz	c3e599984ad7e0ca0531ebd2999f0f7678537e5bfd3ba2d76fda067d692d5449
 502_PersonViT	download_ain	default	Apache-2.0	819	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/502_PersonViT/resources_ain.tar.gz	f9c76e475d8783120a60b0e2c5b0f767dfa2900f84656cfdcf9d62b47848b042
-430_FastReID	download_mot17_mot20_sbs_s50	default	Apache-2.0	6753	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/430_FastReID/resources_mot17_mot20_sbs_s50.tar.gz	
+430_FastReID	download_mot17_mot20_sbs_s50	default	Apache-2.0	6753	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/430_FastReID/resources_mot17_mot20_sbs_s50.tar.gz	08c370f6675bb37519a4ab540f1f06b9a78827893782f589ecb46e2f5b442988
 429_OSNet	download_11x1NxNM	optional	MIT	1637	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/429_OSNet/resources_11x1NxNM.tar.gz	
 429_OSNet	download_11x1NxNM_feature_only	optional	MIT	1609	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/429_OSNet/resources_11x1NxNM_feature_only.tar.gz	
 429_OSNet	download_1x3xHxW	optional	MIT	540	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/429_OSNet/resources_1x3xHxW.tar.gz	
 429_OSNet	download_Nx3xHxW	optional	MIT	536	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/429_OSNet/resources_Nx3xHxW.tar.gz	
 429_OSNet	download_new	default	MIT	819	re-identification: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/502_PersonViT/resources_ain.tar.gz	f9c76e475d8783120a60b0e2c5b0f767dfa2900f84656cfdcf9d62b47848b042
-483_LVFace	download	default	MIT	1647	face recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/483_LVFace/resources.tar.gz	
-484_TransFace	download	default	UNSPECIFIED	3426	face recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/484_TransFace/resources.tar.gz	
+483_LVFace	download	default	MIT	1647	face recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/483_LVFace/resources.tar.gz	00a00d9d7c838a94ed2ea2592833fa17c3861917b80ee8bdbdd29dbed94b61b4
+484_TransFace	download	default	UNSPECIFIED	3426	face recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/484_TransFace/resources.tar.gz	ceaf28a19c4200f9dc8ee46d7d75fba404053e3883b748cc78ddf7d4a8c52fd5
 290_AdaFace	download	optional	MIT	20319	face recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/290_AdaFace/resources.tar.gz	
 256_SFace	download	default	Apache-2.0	515	face recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/256_SFace/resources.tar.gz	304b187058246d95ed86c6c7d33f10bea3a22e75e817cd92f9040a62896352a3
 435_MobileFaceNet	download	default	UNSPECIFIED	4	face recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/435_MobileFaceNet/resources.tar.gz	77b85341d207c66e6201d367f7a42d35e67d35ec7d363d05dab9b07ff372b352
 452_FairFace	download	default	CC-BY-4.0	151	face attributes: age/gender/race	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/452_FairFace/resources.tar.gz	c9620d140beeb8b29936afd4945abed6960c44fe55e86359bdcc317cbde81fed
 451_DAN	download	default	MIT	419	face emotion	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/451_DAN/resources.tar.gz	e746f2d8b0d302b755349672cb88fbc9344ac570af3f3695b862be664e9ffbee
-453_FairDAN	download	default	MIT	872	face emotion+attributes	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/453_FairDAN/resources.tar.gz	
-474_Gaze-LLE-DINOv3	download	default	MIT	2344	gaze target	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/474_Gaze-LLE-DINOv3/resources.tar.gz	
-462_Gaze-LLE	download	default	MIT	5792	gaze target	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/462_Gaze-LLE/resources.tar.gz	
-398_L2CS-Net	download	default	MIT	1135	gaze direction	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/398_L2CS-Net/resources.tar.gz	
+453_FairDAN	download	default	MIT	872	face emotion+attributes	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/453_FairDAN/resources.tar.gz	7acefceafdae408f318523e57431e890ca5af18fa4dbfa5aab1731422e2f85b2
+474_Gaze-LLE-DINOv3	download	default	MIT	2344	gaze target	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/474_Gaze-LLE-DINOv3/resources.tar.gz	880cc67ea8717102e838b8e7126607752b023ba7b51b971ea6f5f660d13ba121
+462_Gaze-LLE	download	default	MIT	5792	gaze target	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/462_Gaze-LLE/resources.tar.gz	7b354dc29eb5fe1f23a632758dda79cb1cf24d0a272fff8759220f1597cd890d
+398_L2CS-Net	download	default	MIT	1135	gaze direction	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/398_L2CS-Net/resources.tar.gz	ab50580510ceb61854f0b82638e53399dabf9a58ff4de1ef774ae4819aceaa4a
 431_NITEC	download	default	MIT	228	eye contact	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/431_NITEC/resources.tar.gz	983cf470f632c98b3421cf54d22ed70be68fcdcf7454f43f2b7c9b741b8195b9
 505_YawNet	download	default	MIT	32	head yaw	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/505_YawNet/resources.tar.gz	6420b4dd3f7a465b6b96d024eac358817cf85b542040b8e99e461b8ad9af9c81
 506_HFHPE	download	default	MIT	484	head pose	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/506_HFHPE/resources.tar.gz	cf4de0950e226ce64b236871b0a0e89d033094cbdf52c2b96d8791ca40fd4870
@@ -38,28 +38,28 @@ zoo_directory	archive	tier	license	size_mb	task	url	sha256
 493_HHC	download	default	MIT	13	hat	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/493_HHC/resources.tar.gz	728ed61ae4681d94a774b4be75dd97ec17c32d977a2d7a202704b1c1d7f59bc0
 495_Comprehensive-Head-Classification	download	default	MIT	32	head attributes	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/495_Comprehensive-Head-Classification/resources.tar.gz	8cb9ab61b5a5601638eee468a13f0ebe981d62e9735956167161168e2d037f8a
 497_PPC	download	default	MIT	109	person-pair state	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/497_PPC/resources.tar.gz	44132f0fd25e1d9567eb0faa760c95c2b07f2120362a6714982b7de81e93578d
-466_People_Segmentation	download	default	MIT	1558	person segmentation	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/466_People_Segmentation/resources.tar.gz	
-467_Human_Parsing	download	default	MIT	9234	human parsing: clothing	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/467_Human_Parsing/resources.tar.gz	
-470_RHIS	download	default	MIT	6136	instance segmentation: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/470_RHIS/resources.tar.gz	
-473_HISDF	download_n	default	Apache-2.0	2825	person instance+skeleton+depth	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/473_HISDF/resources_n.tar.gz	
+466_People_Segmentation	download	default	MIT	1558	person segmentation	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/466_People_Segmentation/resources.tar.gz	811ff0d98d3403c8cba7929fbd164f03496fcaaad1f3ec6dd8865ef28bbc7c04
+467_Human_Parsing	download	default	MIT	9234	human parsing: clothing	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/467_Human_Parsing/resources.tar.gz	0e4da0c59a607025930dd8292bfcde4cab72214004bbc786cb5829e0fdd53d7b
+470_RHIS	download	default	MIT	6136	instance segmentation: person	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/470_RHIS/resources.tar.gz	ab6de9c7e054ce3f4f62915cea1e85e5eea47d3f11f2e74766dfa70371196a50
+473_HISDF	download_n	default	Apache-2.0	2825	person instance+skeleton+depth	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/473_HISDF/resources_n.tar.gz	5a75e30599a00d36771ced95b694fdd01635a13ccb0f389168b9bc63a869bea4
 473_HISDF	download_pico	optional	Apache-2.0	2723	person instance+skeleton+depth	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/473_HISDF/resources_pico.tar.gz	
-473_HISDF	download_s	default	Apache-2.0	3130	person instance+skeleton+depth	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/473_HISDF/resources_s.tar.gz	
+473_HISDF	download_s	default	Apache-2.0	3130	person instance+skeleton+depth	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/473_HISDF/resources_s.tar.gz	1b268e71f453c992cab5cf1756481ef1058475ad7ea2ccf9576edd64db50408b
 473_HISDF	download_x	optional	Apache-2.0	15424	person instance+skeleton+depth	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/473_HISDF/resources_x.tar.gz	
 380_Skin-Clothes-Hair-Segmentation-using-SMP	download	default	MIT	86	skin/clothes/hair segmentation	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/380_Skin-Clothes-Hair-Segmentation-using-SMP/resources.tar.gz	55d1bfce444970b8fdb1f2be20a733017bc2dd87c92f699e3b190d3e2acb05bc
-393_RTMPose_WholeBody	download	default	Apache-2.0	3535	pose: wholebody	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/393_RTMPose_WholeBody/resources.tar.gz	
-440_ViTPose	download	default	Apache-2.0	10506	pose: body	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/440_ViTPose/resources.tar.gz	
+393_RTMPose_WholeBody	download	default	Apache-2.0	3535	pose: wholebody	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/393_RTMPose_WholeBody/resources.tar.gz	dc3696a69fbb439c6c20aab3db0fbdf84687b06f7a66f416cdf4910167023df2
+440_ViTPose	download	default	Apache-2.0	10506	pose: body	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/440_ViTPose/resources.tar.gz	4f3538baba9d7a7d561fdb85b75c7c264ad6f6d2fc05c540c397e41dc3921d0f
 427_RTMPose_Hand	download	default	Apache-2.0	195	pose: hand	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/427_RTMPose_Hand/resources.tar.gz	2ec752ae3d4156e66973bbabb10f01eedd80059455674cc18a4fd6d10008fcbd
 369_Segment_Anything	download	default	Apache-2.0	53	object: class-agnostic segmentation	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/369_Segment_Anything/resources.tar.gz	08ec011bdc9277e422182c0ac9032ab165f17b2847db3c94f22ed050d41d1046
-376_RT-DETR	download_hgnetv2_l	default	Apache-2.0	3974	object: COCO detection	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/376_RT-DETR/resources_hgnetv2_l.tar.gz	
+376_RT-DETR	download_hgnetv2_l	default	Apache-2.0	3974	object: COCO detection	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/376_RT-DETR/resources_hgnetv2_l.tar.gz	6325cd5e00ba045aa299e4732cbf606588f71db81b30848a69f0d46cead31f19
 376_RT-DETR	download_hgnetv2_x	optional	Apache-2.0	8139	object: COCO detection	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/376_RT-DETR/resources_hgnetv2_x.tar.gz	
 376_RT-DETR	download_paddle	optional	Apache-2.0	10719	object: COCO detection	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/376_RT-DETR/rtdetr_paddle.tar.gz	
 376_RT-DETR	download_resnet101	optional	Apache-2.0	9263	object: COCO detection	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/376_RT-DETR/resources_resnet101.tar.gz	
 376_RT-DETR	download_resnet50	optional	Apache-2.0	5210	object: COCO detection	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/376_RT-DETR/resources_resnet50.tar.gz	
-264_object_localization_network	download	default	Apache-2.0	1026	object: class-agnostic proposals	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/264_object_localization_network/resources.tar.gz	
+264_object_localization_network	download	default	Apache-2.0	1026	object: class-agnostic proposals	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/264_object_localization_network/resources.tar.gz	517bf8c07ea2e70bdf35e8d840f0d25a5f52e8c3884bda1bed395256cb8afcfd
 439_Depth-Anything	download_b	optional	Apache-2.0	26857	depth: monocular	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/439_Depth-Anything/resources_b.tar.gz	
 439_Depth-Anything	download_l	optional	Apache-2.0	46152	depth: monocular	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/439_Depth-Anything/resources_l.tar.gz	
-439_Depth-Anything	download_s	default	Apache-2.0	6838	depth: monocular	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/439_Depth-Anything/resources_s.tar.gz	
-397_MiDaSv3.1	download	default	MIT	5897	depth: monocular	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/397_MiDaSv3.1/resources.tar.gz	
+439_Depth-Anything	download_s	default	Apache-2.0	6838	depth: monocular	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/439_Depth-Anything/resources_s.tar.gz	dc9b1f4359f6b720902981bf4874ffaa503ce9a4b1b2540e95f6cfa9c52f29e5
+397_MiDaSv3.1	download	default	MIT	5897	depth: monocular	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/397_MiDaSv3.1/resources.tar.gz	fcbbdababc1cf074fc4944dafbbe7100501c6d51e01c59f5c7bd113d21f3ed03
 360_PARSeq	download	default	Apache-2.0	272	text recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/360_PARSeq/resources.tar.gz	b40601085762398bba787c82d0f6b4777f8f3a932d19f09cadab07992ef9e3e6
 366_text_recognition_CRNN	download	default	Apache-2.0	531	text recognition	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/366_text_recognition_CRNN/resources.tar.gz	aa55651353c51b6d842e0c54ed1cfbb51eb3a2950856447b6487ee4460cb8d17
 145_text_detection_db	download	default	Apache-2.0	753	text detection	https://s3.ap-northeast-2.wasabisys.com/pinto-model-zoo/145_text_detection_db/resources.tar.gz	fd48d936fea50212c59031ebb51d4b9c404ddd0b7238091a7b8c60fd407177e7
