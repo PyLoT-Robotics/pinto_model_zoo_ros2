@@ -1,0 +1,20 @@
+services:
+  wholebody_detector:
+    image: pinto_model_zoo_ros2:humble
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    gpus: all
+    network_mode: host
+    environment:
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
+    command:
+      - ros2
+      - run
+      - pinto_model_zoo_ros2
+      - wholebody_detector
+      - --ros-args
+      - -r
+      - image:=${IMAGE_TOPIC:-/camera/color/image_raw}
+      - -p
+      - "model_variant:='${MODEL_VARIANT:-s}'"

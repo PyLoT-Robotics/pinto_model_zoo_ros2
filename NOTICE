@@ -1,0 +1,11 @@
+pinto_model_zoo_ros2
+Copyright 2026 PyLoT Robotics
+
+This repository stores no model weights. A locally built Docker image contains
+DEIMv2-Wholebody49 by Katsuya Hyodo, published as Apache-2.0 at
+https://github.com/PINTO0309/PINTO_model_zoo/tree/main/488_DEIMv2-Wholebody49
+
+That model derives from works with their own terms, which may also apply:
+- DEIMv2 License (non-commercial purposes only): https://github.com/Intellindust-AI-Lab/DEIMv2/blob/master/LICENSE.md
+- DINOv3 License (variants s and x): https://github.com/facebookresearch/dinov3/blob/main/LICENSE.md
+Review these before redistributing a built image.
