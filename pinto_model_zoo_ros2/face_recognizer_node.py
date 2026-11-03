@@ -12,15 +12,11 @@ from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import Image
 from vision_msgs.msg import Detection2D, Detection2DArray, ObjectHypothesisWithPose
 
-from pinto_model_zoo_ros2.face_recognition import FaceEncoder, FaceGallery
+from pinto_model_zoo_ros2.face_recognition import FaceEncoder, FaceGallery, crop_face
 from pinto_model_zoo_ros2.wholebody49 import Detection, ScoreThresholds, Wholebody49Detector
 
 FACE_CLASS_NAME = "face"
 DEBUG_BOX_COLOR_BGR = (0, 255, 0)
-
-
-def crop_face(image_bgr: np.ndarray, detection: Detection) -> np.ndarray:
-    return image_bgr[int(detection.y1):int(detection.y2), int(detection.x1):int(detection.x2)]
 
 
 def to_face_message(
@@ -41,7 +37,7 @@ def to_face_message(
     return message
 
 
-def draw_faces(image_bgr, detections, scores_per_face):
+def draw_faces(image_bgr: np.ndarray, detections, scores_per_face) -> np.ndarray:
     canvas = image_bgr.copy()
     for detection, scores in zip(detections, scores_per_face):
         top_left = (int(detection.x1), int(detection.y1))
@@ -62,6 +58,8 @@ class FaceRecognizerNode(Node):
         face_score_threshold = self.declare_parameter("face_score_threshold", 0.50).value
         gallery_directory = self.declare_parameter("gallery_directory", "/faces").value
         rate_hz = self.declare_parameter("rate_hz", 5.0).value
+        if rate_hz <= 0.0:
+            raise ValueError(f"rate_hz must be positive: {rate_hz}")
 
         self._detector = Wholebody49Detector(
             model_directory, variant, ScoreThresholds(object_score=face_score_threshold)
@@ -85,12 +83,14 @@ class FaceRecognizerNode(Node):
         )
 
     def _embed_gallery_image(self, image_bgr: np.ndarray) -> Optional[np.ndarray]:
-        faces = self._faces_in(image_bgr)
-        if faces:
-            largest = max(faces, key=lambda face: (face.x2 - face.x1) * (face.y2 - face.y1))
-            face_image = crop_face(image_bgr, largest)
-        else:
-            self.get_logger().warning("No face in gallery image; using the whole image")
+        faces = sorted(self._faces_in(image_bgr),
+                       key=lambda face: (face.x2 - face.x1) * (face.y2 - face.y1), reverse=True)
+        face_image = next(
+            (crop for crop in (crop_face(image_bgr, face) for face in faces) if crop is not None),
+            None,
+        )
+        if face_image is None:
+            self.get_logger().warning("No usable face in gallery image; using the whole image")
             face_image = image_bgr
         return self._encoder.encode([face_image])[0]
 
@@ -100,6 +100,17 @@ class FaceRecognizerNode(Node):
     def _has_subscribers(self) -> bool:
         return (self._faces_publisher.get_subscription_count() > 0
                 or self._debug_image_publisher.get_subscription_count() > 0)
+
+    def _recognize(self, image_bgr: np.ndarray):
+        if self._gallery.refresh():
+            self.get_logger().info(f"Gallery: {list(self._gallery.names)}")
+        crops = [(face, crop_face(image_bgr, face)) for face in self._faces_in(image_bgr)]
+        faces = tuple(face for face, crop in crops if crop is not None)
+        scores_per_face = [()] * len(faces)
+        if faces and self._gallery.names:
+            embeddings = self._encoder.encode([crop for _, crop in crops if crop is not None])
+            scores_per_face = [tuple(scores) for scores in self._gallery.match(embeddings)]
+        return faces, scores_per_face
 
     def _on_timer(self) -> None:
         image_message, self._latest_image = self._latest_image, None
@@ -111,14 +122,11 @@ class FaceRecognizerNode(Node):
             self.get_logger().error(f"Cannot convert {image_message.encoding!r}: {error}",
                                     throttle_duration_sec=5.0)
             return
-        if self._gallery.refresh():
-            self.get_logger().info(f"Gallery: {list(self._gallery.names)}")
-
-        faces = self._faces_in(image_bgr)
-        scores_per_face = [()] * len(faces)
-        if faces and self._gallery.names:
-            embeddings = self._encoder.encode([crop_face(image_bgr, face) for face in faces])
-            scores_per_face = [tuple(scores) for scores in self._gallery.match(embeddings)]
+        try:
+            faces, scores_per_face = self._recognize(image_bgr)
+        except Exception as error:  # One bad frame or gallery file must not kill the node.
+            self.get_logger().error(f"Dropped a cycle: {error!r}", throttle_duration_sec=5.0)
+            return
 
         array_message = Detection2DArray()
         array_message.header = image_message.header

@@ -1,10 +1,16 @@
 """LVFace embeddings and a directory-backed face gallery without any ROS dependency."""
 
+import logging
+import math
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Sequence, Tuple
 
 import cv2
 import numpy as np
+
+from pinto_model_zoo_ros2.wholebody49 import Detection
+
+logger = logging.getLogger(__name__)
 
 FACE_INPUT_SIZE = 112
 GALLERY_SUFFIXES = (".jpg", ".png")
@@ -23,6 +29,14 @@ def preprocess_faces(faces_bgr: Sequence[np.ndarray]) -> np.ndarray:
     ]
     batch = np.stack(resized).astype(np.float32).transpose(0, 3, 1, 2)
     return (batch / 255.0 - 0.5) / 0.5
+
+
+def crop_face(image_bgr: np.ndarray, detection: Detection) -> Optional[np.ndarray]:
+    """Crop the box rounded outward; return None when it has no pixels (sub-pixel box)."""
+    top, left = max(math.floor(detection.y1), 0), max(math.floor(detection.x1), 0)
+    bottom, right = math.ceil(detection.y2), math.ceil(detection.x2)
+    crop = image_bgr[top:bottom, left:right]
+    return crop if crop.size > 0 else None
 
 
 def l2_normalize(embeddings: np.ndarray) -> np.ndarray:
@@ -64,6 +78,7 @@ class FaceGallery:
         self._embed = embed
         self._signatures: Dict[str, FileSignature] = {}
         self._embedding_by_name: Dict[str, np.ndarray] = {}
+        self._ambiguous_stems: set = set()
         self.names: Tuple[str, ...] = ()
         self.embeddings = np.empty((0, 0), dtype=np.float32)
 
@@ -79,9 +94,13 @@ class FaceGallery:
             del self._embedding_by_name[name]
         for name in changed:
             path, signature = current[name]
+            if name in self._ambiguous_stems:
+                logger.warning("Both .jpg and .png exist for %r; using the newer %s", name, path.name)
             embedding = self._embed_file(path)
             if embedding is None:
-                # Not recorded, so the next refresh retries (e.g. file still being written).
+                # The new signature is not recorded, so the next refresh retries (e.g. the file
+                # is still being written). Deliberately keep the previous embedding of an
+                # overwritten file meanwhile, so recognition does not drop out mid-write.
                 continue
             self._signatures[name] = signature
             self._embedding_by_name[name] = embedding
@@ -102,13 +121,18 @@ class FaceGallery:
 
     def _scan(self) -> Dict[str, Tuple[Path, FileSignature]]:
         files: Dict[str, Tuple[Path, FileSignature]] = {}
+        self._ambiguous_stems = set()
         if not self._directory.is_dir():
             return files
         for path in sorted(self._directory.iterdir()):
             if path.suffix.lower() in GALLERY_SUFFIXES and path.is_file():
                 status = path.stat()
-                # Same stem with two suffixes: the later one in sort order wins.
-                files[path.stem] = (path, (status.st_mtime_ns, status.st_size))
+                signature = (status.st_mtime_ns, status.st_size)
+                if path.stem in files:
+                    self._ambiguous_stems.add(path.stem)
+                    if files[path.stem][1][0] >= signature[0]:
+                        continue  # Same stem with two suffixes: the newer file wins.
+                files[path.stem] = (path, signature)
         return files
 
     def _embed_file(self, path: Path) -> Optional[np.ndarray]:

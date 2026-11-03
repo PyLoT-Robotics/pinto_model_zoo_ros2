@@ -3,7 +3,8 @@ import os
 import cv2
 import numpy as np
 
-from pinto_model_zoo_ros2.face_recognition import FaceGallery, preprocess_faces
+from pinto_model_zoo_ros2.face_recognition import FaceGallery, crop_face, preprocess_faces
+from pinto_model_zoo_ros2.wholebody49 import Detection
 
 
 def write_image(path, value):
@@ -74,3 +75,42 @@ def test_match_returns_all_names_best_first_per_face(tmp_path):
     assert [name for name, _ in result[0]] == ["b", "a"]
     assert [name for name, _ in result[1]] == ["a", "b"]
     assert result[1][0][1] == 1.0
+
+
+def test_crop_face_rounds_outward_and_drops_empty_boxes():
+    image = np.zeros((50, 40, 3), dtype=np.uint8)
+    sub_pixel = Detection(16, 0.9, 10.2, 5.0, 10.8, 20.0)
+    assert crop_face(image, sub_pixel).shape == (15, 1, 3)  # ceil/floor keeps one column
+    outside = Detection(16, 0.9, 45.0, 5.0, 46.0, 20.0)
+    assert crop_face(image, outside) is None
+    preprocess_faces([crop_face(image, sub_pixel)])  # used to raise cv2.error on empty crops
+
+
+def test_preprocess_faces_maps_midpoint_value():
+    batch = preprocess_faces([np.full((8, 8, 3), 128, dtype=np.uint8)])
+    assert np.allclose(batch, (128 / 255.0 - 0.5) / 0.5)
+
+
+def test_newer_of_jpg_and_png_with_same_stem_wins(tmp_path):
+    write_image(tmp_path / "dan.png", 10)
+    write_image(tmp_path / "dan.jpg", 200)
+    advance_mtime(tmp_path / "dan.jpg")
+    gallery = FaceGallery(tmp_path, embed_by_brightness)
+    gallery.refresh()
+    assert gallery.embeddings[0, 0] > 150
+
+
+def test_overwrite_unreadable_keeps_previous_embedding_until_readable(tmp_path):
+    write_image(tmp_path / "eve.jpg", 100)
+    gallery = FaceGallery(tmp_path, embed_by_brightness)
+    gallery.refresh()
+    old_value = gallery.embeddings[0, 0]
+
+    (tmp_path / "eve.jpg").write_bytes(b"partial")  # overwrite in progress
+    advance_mtime(tmp_path / "eve.jpg")
+    assert gallery.refresh() is False
+    assert gallery.names == ("eve",) and gallery.embeddings[0, 0] == old_value
+
+    write_image(tmp_path / "eve.jpg", 220)
+    advance_mtime(tmp_path / "eve.jpg", seconds=20)
+    assert gallery.refresh() is True and gallery.embeddings[0, 0] > old_value
