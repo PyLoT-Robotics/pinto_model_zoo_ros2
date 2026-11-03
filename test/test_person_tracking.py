@@ -119,3 +119,35 @@ def test_pipeline_fills_tracks_target_and_timings():
     assert len(result.detections) == 2 and len(result.tracks) == 1
     assert result.target.track_id == result.tracks[0].track_id
     assert result.stamp_sec == 1.5 and result.total_ms >= result.detect_ms >= 0
+
+
+def accepts_orthogonal_probe_after_following(ema_alpha):
+    selector = TargetSelector(0.5, 7.0, ema_alpha)
+    selector.update([person(1, 1000, unit(1, 0))], 0.0)
+    selector.update([person(1, 1000, unit(1, 1))], 1.0)
+    return selector.update([person(1, 1000, unit(0, 1))], 2.0) is not None
+
+
+def test_selector_updates_target_embedding_by_ema():
+    assert accepts_orthogonal_probe_after_following(ema_alpha=1.0)
+    assert not accepts_orthogonal_probe_after_following(ema_alpha=0.1)
+
+
+def test_selector_reacquires_candidate_with_highest_similarity():
+    selector = TargetSelector(0.5, 7.0, 0.1)
+    selector.update([person(1, 1000, unit(1, 0))], 0.0)
+    candidates = [
+        person(2, 1000, unit(1, 1)),
+        person(3, 3000, unit(2, 1)),
+        person(4, 500, unit(0, 1)),
+    ]
+    assert selector.update(candidates, 1.0).track_id == 3
+    assert selector.events.reacquired_by_reid == 1
+
+
+def test_selector_returns_none_after_rejection_without_similar_candidate():
+    selector = TargetSelector(0.5, 7.0, 0.1)
+    selector.update([person(1, 1000, unit(1, 0))], 0.0)
+    assert selector.update([person(1, 1000, unit(0, 1))], 1.0) is None
+    assert selector.events.rejected_by_reid == 1
+    assert selector.target_track_id is None
