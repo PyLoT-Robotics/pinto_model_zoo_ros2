@@ -8,7 +8,7 @@ pytest.importorskip("message_filters")
 
 from std_msgs.msg import Header
 
-from pinto_model_zoo_ros2.person_tracker_node import to_person_message
+from pinto_model_zoo_ros2.person_tracker_node import should_process_frame, to_person_message
 from pinto_model_zoo_ros2.person_tracking import Intrinsics, TrackedPerson
 from pinto_model_zoo_ros2.wholebody49 import Detection
 
@@ -33,3 +33,10 @@ def test_to_person_message_projects_center_to_camera_coordinates():
 def test_to_person_message_without_intrinsics_keeps_only_depth():
     position = to_person_message(make_person(), Header(), None).results[0].pose.pose.position
     assert (position.x, position.y, position.z) == (0.0, 0.0, 2.0)
+
+
+def test_should_process_frame_applies_rate_limit_and_resets_on_backwards_stamp():
+    assert should_process_frame(10.0, None, 0.1)
+    assert not should_process_frame(10.05, 10.0, 0.1)
+    assert should_process_frame(10.25, 10.0, 0.1)
+    assert should_process_frame(3.0, 10.0, 0.1)

@@ -8,6 +8,7 @@ import message_filters
 import rclpy
 from cv_bridge import CvBridge, CvBridgeError
 from rclpy.node import Node
+from rcl_interfaces.msg import ParameterDescriptor
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import CameraInfo, Image
 from std_srvs.srv import Trigger
@@ -28,6 +29,16 @@ DEPTH_ENCODING = "16UC1"
 MILLIMETERS_PER_METER = 1000.0
 TRACK_COLOR_BGR = (0, 255, 0)
 TARGET_COLOR_BGR = (0, 0, 255)
+
+
+def should_process_frame(
+    stamp_sec: float, last_processed_stamp_sec: Optional[float], minimum_interval_sec: float
+) -> bool:
+    """Skip frames that arrive too soon; a backwards stamp (bag loop, camera restart) resets."""
+    if last_processed_stamp_sec is None:
+        return True
+    elapsed_sec = stamp_sec - last_processed_stamp_sec
+    return elapsed_sec < 0.0 or elapsed_sec >= minimum_interval_sec
 
 
 def to_person_message(
@@ -72,6 +83,11 @@ def draw_tracks(image_bgr, tracks: Iterable[TrackedPerson], target: Optional[Tra
 
 
 class PersonTrackerNode(Node):
+    def _declare_number(self, name: str, default: float) -> float:
+        """Accept both integer and decimal values from launch files and yaml."""
+        descriptor = ParameterDescriptor(dynamic_typing=True)
+        return float(self.declare_parameter(name, default, descriptor).value)
+
     def __init__(self) -> None:
         super().__init__("person_tracker")
         model_directory = Path(self.declare_parameter("model_directory", "/models").value)
@@ -81,10 +97,10 @@ class PersonTrackerNode(Node):
         thresholds = ScoreThresholds(
             object_score=self.declare_parameter("object_score_threshold", 0.50).value)
         filters = CandidateFilters(
-            min_bbox_height_px=self.declare_parameter("min_bbox_height_px", 100).value,
-            min_bbox_area_px=self.declare_parameter("min_bbox_area_px", 2000).value,
-            depth_min_mm=self.declare_parameter("depth_min_mm", 100).value,
-            depth_max_mm=self.declare_parameter("depth_max_mm", 8000).value,
+            min_bbox_height_px=self._declare_number("min_bbox_height_px", 100.0),
+            min_bbox_area_px=self._declare_number("min_bbox_area_px", 2000.0),
+            depth_min_mm=self._declare_number("depth_min_mm", 100.0),
+            depth_max_mm=self._declare_number("depth_max_mm", 8000.0),
         )
         tracker = PersonTracker(
             iou_threshold=self.declare_parameter("iou_match_threshold", 0.3).value,
@@ -99,7 +115,7 @@ class PersonTrackerNode(Node):
         detector = Wholebody49Detector(model_directory, variant, thresholds)
         encoder = PersonReidEncoder(model_directory, reid_model_file)
         self._pipeline = PersonTrackingPipeline(detector, encoder, tracker, self._selector, filters)
-        self._minimum_interval_sec = 1.0 / self.declare_parameter("max_rate_hz", 15.0).value
+        self._minimum_interval_sec = 1.0 / self._declare_number("max_rate_hz", 15.0)
         self._last_processed_stamp_sec: Optional[float] = None
         self._intrinsics: Optional[Intrinsics] = None
         self._bridge = CvBridge()
@@ -126,6 +142,10 @@ class PersonTrackerNode(Node):
             self.get_logger().warning(f"GPU unavailable: variant {variant!r} is running on {provider}")
 
     def _on_camera_info(self, message: CameraInfo) -> None:
+        if message.k[0] <= 0.0 or message.k[4] <= 0.0:
+            self.get_logger().warning("camera_info has no valid focal length: ignored",
+                                      throttle_duration_sec=5.0)
+            return
         self._intrinsics = Intrinsics(fx=message.k[0], fy=message.k[4], cx=message.k[2], cy=message.k[5])
 
     def _on_release_target(self, _request, response):
@@ -136,8 +156,8 @@ class PersonTrackerNode(Node):
 
     def _on_synchronized_images(self, image_message: Image, depth_message: Image) -> None:
         stamp_sec = image_message.header.stamp.sec + image_message.header.stamp.nanosec * 1e-9
-        if (self._last_processed_stamp_sec is not None
-                and stamp_sec - self._last_processed_stamp_sec < self._minimum_interval_sec):
+        if not should_process_frame(
+                stamp_sec, self._last_processed_stamp_sec, self._minimum_interval_sec):
             return
         if depth_message.encoding != DEPTH_ENCODING:
             self.get_logger().error(
@@ -151,11 +171,15 @@ class PersonTrackerNode(Node):
             self.get_logger().error(f"Cannot convert images: {error}", throttle_duration_sec=5.0)
             return
         self._last_processed_stamp_sec = stamp_sec
+        try:
+            self._process_and_publish(image_message.header, image_bgr, depth_mm_image, stamp_sec)
+        except Exception as error:  # keep the node alive: drop only this frame
+            self.get_logger().error(f"Dropped frame: {error!r}", throttle_duration_sec=5.0)
 
+    def _process_and_publish(self, header, image_bgr, depth_mm_image, stamp_sec: float) -> None:
         if self._intrinsics is None:
             self.get_logger().warning("camera_info not received: X and Y are 0", once=True)
         result = self._pipeline.process(image_bgr, depth_mm_image, stamp_sec)
-        header = image_message.header
 
         tracks_message = Detection2DArray()
         tracks_message.header = header
