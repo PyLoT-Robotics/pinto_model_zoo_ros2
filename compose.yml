@@ -37,7 +37,7 @@ services:
       - -r
       - depth:=${DEPTH_TOPIC:-/d455/camera/aligned_depth_to_color/image_raw}
       - -r
-      - camera_info:=${CAMERA_INFO_TOPIC:-/d455/camera/aligned_depth_to_color/camera_info}
+      - camera_info:=${CAMERA_INFO_TOPIC:-/d455/camera/color/camera_info}
 
   face_recognizer:
     image: pinto_model_zoo_ros2:humble
