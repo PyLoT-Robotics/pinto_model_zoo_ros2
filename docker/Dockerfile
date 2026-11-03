@@ -3,7 +3,7 @@ FROM ros:humble-ros-base
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         python3-pip python3-pytest \
-        ros-humble-cv-bridge ros-humble-vision-msgs ros-humble-rmw-fastrtps-cpp ros-humble-rosbag2-storage-mcap \
+        ros-humble-cv-bridge ros-humble-vision-msgs ros-humble-rmw-fastrtps-cpp ros-humble-rosbag2-storage-mcap ros-humble-rosbag2-py \
         libgl1 libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
