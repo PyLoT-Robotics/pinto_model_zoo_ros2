@@ -40,6 +40,11 @@ BYTES_PER_DEPTH_PIXEL = 2
 
 TARGET_COLOR_BGR = (0, 255, 0)
 OTHER_COLOR_BGR = (160, 160, 160)
+TARGET_ID_CHANGES_NOTE = (
+    "target_id_changes: number of times the target's track id changed. Includes ReID "
+    "reacquisition that re-assigns an id to the same person, so it is not the number of "
+    "switches to a different person."
+)
 CSV_COLUMNS = (
     "stamp_sec", "n_detections", "n_tracks", "target_track_id",
     "target_depth_mm", "detect_ms", "reid_ms", "total_ms",
@@ -180,7 +185,7 @@ def write_outputs(output_directory: Path, rows: List[FrameRow], summary: Summary
         writer = csv.DictWriter(csv_file, fieldnames=CSV_COLUMNS)
         writer.writeheader()
         writer.writerows(asdict(row) for row in rows)
-    summary_json = {**asdict(summary), "events": asdict(events)}
+    summary_json = {**asdict(summary), "events": asdict(events), "note": TARGET_ID_CHANGES_NOTE}
     (output_directory / "summary.json").write_text(json.dumps(summary_json, indent=2))
     print(json.dumps(summary_json, indent=2))
 

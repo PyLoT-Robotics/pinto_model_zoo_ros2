@@ -1,6 +1,6 @@
 from pinto_model_zoo_ros2.tracking_metrics import (
     FrameRow,
-    count_target_switches,
+    count_target_id_changes,
     summarize,
     timing_stats,
 )
@@ -19,12 +19,12 @@ def make_row(target_track_id, total_ms=10.0):
     )
 
 
-def test_switches_ignore_gaps_with_same_id():
-    assert count_target_switches([1, 1, None, None, 1]) == 0
+def test_id_changes_ignore_gaps_with_same_id():
+    assert count_target_id_changes([1, 1, None, None, 1]) == 0
 
 
-def test_switches_count_id_change_directly_and_across_gap():
-    assert count_target_switches([1, 2, None, 3, 3]) == 2
+def test_id_changes_count_id_change_directly_and_across_gap():
+    assert count_target_id_changes([1, 2, None, 3, 3]) == 2
 
 
 def test_summarize_counts_frames_and_target_frames():
@@ -32,7 +32,7 @@ def test_summarize_counts_frames_and_target_frames():
 
     assert summary.frames == 3
     assert summary.frames_with_target == 2
-    assert summary.target_switches == 1
+    assert summary.target_id_changes == 1
 
 
 def test_timing_stats_mean_and_nearest_rank_p95():
