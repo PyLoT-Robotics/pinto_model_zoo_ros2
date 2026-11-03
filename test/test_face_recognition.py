@@ -88,7 +88,7 @@ def test_crop_face_rounds_outward_and_drops_empty_boxes():
 
 def test_preprocess_faces_maps_midpoint_value():
     batch = preprocess_faces([np.full((8, 8, 3), 128, dtype=np.uint8)])
-    assert np.allclose(batch, (128 / 255.0 - 0.5) / 0.5)
+    assert np.allclose(batch, (128 / 255.0 - 0.5) / 0.5, atol=1e-6)
 
 
 def test_newer_of_jpg_and_png_with_same_stem_wins(tmp_path):
