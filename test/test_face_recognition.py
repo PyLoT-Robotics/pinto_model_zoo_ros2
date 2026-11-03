@@ -1,0 +1,76 @@
+import os
+
+import cv2
+import numpy as np
+
+from pinto_model_zoo_ros2.face_recognition import FaceGallery, preprocess_faces
+
+
+def write_image(path, value):
+    cv2.imwrite(str(path), np.full((20, 30, 3), value, dtype=np.uint8))
+
+
+def embed_by_brightness(image):
+    return np.array([float(image.mean()), 1.0], dtype=np.float32)
+
+
+def advance_mtime(path, seconds=10):
+    status = path.stat()
+    os.utime(path, ns=(status.st_atime_ns, status.st_mtime_ns + seconds * 10**9))
+
+
+def test_preprocess_faces_shape_range_and_rgb_order():
+    bgr = np.zeros((50, 40, 3), dtype=np.uint8)
+    bgr[..., 0] = 255  # blue in BGR
+    batch = preprocess_faces([bgr, bgr])
+    assert batch.shape == (2, 3, 112, 112) and batch.dtype == np.float32
+    assert batch[0, 2].min() == 1.0  # RGB: blue is the last channel, (255/255-0.5)/0.5
+    assert batch[0, 0].max() == -1.0
+
+
+def test_gallery_uses_stem_and_detects_add_overwrite_remove(tmp_path):
+    gallery = FaceGallery(tmp_path, embed_by_brightness)
+    assert gallery.refresh() is False and gallery.match(np.ones((1, 2))) == []
+
+    write_image(tmp_path / "alice.jpg", 100)
+    assert gallery.refresh() is True and gallery.names == ("alice",)
+    assert gallery.refresh() is False
+
+    before = gallery.embeddings.copy()
+    write_image(tmp_path / "alice.jpg", 200)
+    advance_mtime(tmp_path / "alice.jpg")
+    assert gallery.refresh() is True
+    assert gallery.embeddings[0, 0] != before[0, 0]
+
+    (tmp_path / "alice.jpg").unlink()
+    assert gallery.refresh() is True and gallery.names == ()
+
+
+def test_gallery_retries_unreadable_file_on_next_refresh(tmp_path):
+    (tmp_path / "bob.png").write_bytes(b"partial")
+    gallery = FaceGallery(tmp_path, embed_by_brightness)
+    assert gallery.refresh() is False and gallery.names == ()
+
+    write_image(tmp_path / "bob.png", 50)
+    assert gallery.refresh() is True and gallery.names == ("bob",)
+
+
+def test_gallery_retries_when_embed_returns_none(tmp_path):
+    write_image(tmp_path / "carol.jpg", 80)
+    results = iter([None, np.array([1.0, 0.0], dtype=np.float32)])
+    gallery = FaceGallery(tmp_path, lambda image: next(results))
+    assert gallery.refresh() is False
+    assert gallery.refresh() is True and gallery.names == ("carol",)
+
+
+def test_match_returns_all_names_best_first_per_face(tmp_path):
+    write_image(tmp_path / "a.jpg", 10)
+    write_image(tmp_path / "b.jpg", 10)
+    vectors = {"a": [1.0, 0.0], "b": [0.0, 1.0]}
+    names = iter(["a", "b"])
+    gallery = FaceGallery(tmp_path, lambda image: np.array(vectors[next(names)], dtype=np.float32))
+    gallery.refresh()
+    result = gallery.match(np.array([[0.2, 0.9], [1.0, 0.0]], dtype=np.float32))
+    assert [name for name, _ in result[0]] == ["b", "a"]
+    assert [name for name, _ in result[1]] == ["a", "b"]
+    assert result[1][0][1] == 1.0
