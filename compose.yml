@@ -32,7 +32,7 @@ services:
       - person_tracker
       - --ros-args
       - -r
-      - color:=${COLOR_TOPIC:-/camera/color/image_raw}
+      - image:=${COLOR_TOPIC:-/camera/color/image_raw}
       - -r
       - depth:=${DEPTH_TOPIC:-/camera/aligned_depth_to_color/image_raw}
       - -r
@@ -53,6 +53,6 @@ services:
       - face_recognizer
       - --ros-args
       - -r
-      - color:=${COLOR_TOPIC:-/camera/color/image_raw}
+      - image:=${COLOR_TOPIC:-/camera/color/image_raw}
       - -p
       - gallery_directory:=/faces
