@@ -190,8 +190,6 @@ def parse_arguments(argv=None) -> argparse.Namespace:
     parser.add_argument("bag_directory")
     parser.add_argument("--image-topic", default="/d455/camera/color/image_raw")
     parser.add_argument("--depth-topic", default="/d455/camera/aligned_depth_to_color/image_raw")
-    parser.add_argument("--camera-info-topic", default="/d455/camera/color/camera_info",
-                        help="accepted for CLI compatibility; unused (no 3D output)")  # fmt: skip
     parser.add_argument("--start", type=float, default=0.0, help="seconds since bag start")
     parser.add_argument("--end", type=float, default=None, help="seconds since bag start")
     parser.add_argument("--model-variant", default="s")
