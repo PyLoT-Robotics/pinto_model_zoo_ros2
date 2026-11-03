@@ -104,7 +104,7 @@ class PersonTrackerNode(Node):
         self._intrinsics: Optional[Intrinsics] = None
         self._bridge = CvBridge()
 
-        self._tracks_publisher = self.create_publisher(Detection2DArray, "~/tracks", 10)
+        self._tracks_publisher = self.create_publisher(Detection2DArray, "~/tracked_persons", 10)
         self._target_publisher = self.create_publisher(Detection2D, "~/target", 10)
         self._debug_image_publisher = self.create_publisher(Image, "~/tracking_image", 1)
         self.create_service(Trigger, "~/release_target", self._on_release_target)
