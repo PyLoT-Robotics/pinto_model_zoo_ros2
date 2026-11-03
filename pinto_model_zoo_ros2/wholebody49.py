@@ -78,7 +78,7 @@ def preprocess(image_bgr: np.ndarray, should_normalize: bool) -> np.ndarray:
     return channels_first[np.newaxis]
 
 
-def _intersection_over_union(first: Detection, second: Detection) -> float:
+def intersection_over_union(first: Detection, second: Detection) -> float:
     width = min(first.x2, second.x2) - max(first.x1, second.x1)
     height = min(first.y2, second.y2) - max(first.y1, second.y1)
     if width <= 0 or height <= 0:
@@ -94,7 +94,7 @@ def _suppress_duplicate_keypoints(detections: List[Detection]) -> List[Detection
     for detection in sorted(detections, key=lambda item: item.score, reverse=True):
         is_duplicate = detection.class_id in KEYPOINT_CLASS_IDS and any(
             other.class_id == detection.class_id
-            and _intersection_over_union(detection, other) > KEYPOINT_NMS_IOU
+            and intersection_over_union(detection, other) > KEYPOINT_NMS_IOU
             for other in kept
         )
         if not is_duplicate:
