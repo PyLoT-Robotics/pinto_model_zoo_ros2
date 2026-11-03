@@ -1,0 +1,21 @@
+name: test
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+jobs:
+  unit:
+    runs-on: ubuntu-22.04
+    container: ros:humble-ros-base
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends python3-pip python3-pytest python3-opencv ros-humble-cv-bridge ros-humble-vision-msgs
+          pip3 install "numpy<2"
+      - name: Unit tests (no GPU, no model weights)
+        shell: bash
+        run: |
+          source /opt/ros/humble/setup.bash
+          python3 -m pytest -q test
