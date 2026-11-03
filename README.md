@@ -171,7 +171,10 @@ PINTO; read each model's upstream README for its input and output format.
 Apache-2.0, but it derives from DEIMv2, whose license permits non-commercial purposes only, and
 variants `s` and `x` also use DINOv3. See [NOTICE](NOTICE).
 
-Bundled in the built image (see [NOTICE](NOTICE)): the OSNet-AIN ReID model is Apache-2.0.
+Bundled in the built image (see [NOTICE](NOTICE)): the OSNet-AIN ReID model is distributed by
+PINTO under Apache-2.0 (from 502_PersonViT, itself derived from PersonViT, Apache-2.0). Its
+architecture comes from Torchreid (MIT). The licenses of the person ReID datasets behind
+"unified_aug" are not confirmed.
 LVFace's code is MIT, but its upstream README says the models are for non-commercial research
 only and contradicts itself, so **treat the LVFace weights as non-commercial research use**.
 The Glint360K training data terms are unconfirmed.
