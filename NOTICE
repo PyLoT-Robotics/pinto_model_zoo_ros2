@@ -1,18 +1,38 @@
-pinto_model_zoo_ros2
 Copyright 2026 PyLoT Robotics
 
-This repository stores no model weights. A locally built Docker image contains
-the following models, converted by Katsuya Hyodo (PINTO_model_zoo):
-- DEIMv2-Wholebody49, Apache-2.0:
-  https://github.com/PINTO0309/PINTO_model_zoo/tree/main/488_DEIMv2-Wholebody49
-- OSNet-AIN x1.0 unified_aug (person ReID, from 502_PersonViT), Apache-2.0 per the
-  model zoo catalog; the upstream LICENSE was not found in the archive, so verify it:
-  https://github.com/PINTO0309/PINTO_model_zoo/tree/main/502_PersonViT
-- LVFace-T Glint360K (face recognition), MIT per the model zoo catalog. Check the
-  terms of the Glint360K training data before redistributing:
-  https://github.com/PINTO0309/PINTO_model_zoo/tree/main/483_LVFace
-
-That model derives from works with their own terms, which may also apply:
-- DEIMv2 License (non-commercial purposes only): https://github.com/Intellindust-AI-Lab/DEIMv2/blob/master/LICENSE.md
-- DINOv3 License (variants s and x): https://github.com/facebookresearch/dinov3/blob/main/LICENSE.md
+This repository stores no model weights. A locally built Docker image bundles
+the models below, converted to ONNX by Katsuya Hyodo (PINTO_model_zoo,
+https://github.com/PINTO0309/PINTO_model_zoo). Each section lists the model,
+where it comes from, its license, and the terms of what it derives from.
 Review these before redistributing a built image.
+
+1. DEIMv2-Wholebody49 (person/face detector)
+   Source:  PINTO_model_zoo 488_DEIMv2-Wholebody49
+   License: Apache-2.0 (model zoo catalog)
+   Derived from, with their own terms:
+   - DEIMv2 License, non-commercial purposes only:
+     https://github.com/Intellindust-AI-Lab/DEIMv2/blob/master/LICENSE.md
+   - DINOv3 License (variants s and x only):
+     https://github.com/facebookresearch/dinov3/blob/main/LICENSE.md
+   The DEIMv2 non-commercial condition applies to this model only.
+
+2. OSNet-AIN x1.0 unified_aug (person ReID; osnet_ain_x1_0_p_unified_aug_n.onnx)
+   Source:  PINTO_model_zoo 502_PersonViT (its LICENSE is Apache-2.0)
+   License: Apache-2.0 (502_PersonViT/LICENSE)
+   Derived from:
+   - OSNet-AIN architecture, Torchreid (deep-person-reid), MIT:
+     https://github.com/KaiyangZhou/deep-person-reid
+   - PersonViT (hustvl), Apache-2.0:
+     https://github.com/hustvl/PersonViT
+   Not confirmed: the licenses of the person ReID datasets behind "unified_aug"
+   (the 502_PersonViT README does not state them).
+
+3. LVFace-T Glint360K (face recognition; LVFace-T_Glint360K.onnx)
+   Source:  PINTO_model_zoo 483_LVFace (its LICENSE is MIT, ByteDance)
+   License: MIT for the code. The upstream README
+            (https://github.com/bytedance/LVFace#license) also says the models
+            downloaded from its repo are "for non-commercial research purposes
+            only". This contradicts the MIT wording in the same paragraph, so
+            treat the weights as non-commercial research use until clarified.
+   Training data: Glint360K (insightface). The insightface dataset README does
+            not state a license for it; its terms are not confirmed.

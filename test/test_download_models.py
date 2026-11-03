@@ -27,6 +27,7 @@ def test_archive_table_has_unique_names_and_valid_hashes():
     names = [name for spec in download_models.ARCHIVES for name in spec.files]
     assert len(names) == len(set(names))
     for spec in download_models.ARCHIVES:
+        assert re.fullmatch(r"[0-9a-f]{64}", spec.sha256)
         for sha256 in spec.files.values():
             assert re.fullmatch(r"[0-9a-f]{64}", sha256)
 

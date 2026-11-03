@@ -21,6 +21,7 @@ services:
 
   person_tracker:
     image: pinto_model_zoo_ros2:humble
+    profiles: ["person_tracker"]
     gpus: all
     network_mode: host
     environment:
@@ -32,14 +33,15 @@ services:
       - person_tracker
       - --ros-args
       - -r
-      - image:=${COLOR_TOPIC:-/camera/color/image_raw}
+      - image:=${COLOR_TOPIC:-/d455/camera/color/image_raw}
       - -r
-      - depth:=${DEPTH_TOPIC:-/camera/aligned_depth_to_color/image_raw}
+      - depth:=${DEPTH_TOPIC:-/d455/camera/aligned_depth_to_color/image_raw}
       - -r
-      - camera_info:=${CAMERA_INFO_TOPIC:-/camera/color/camera_info}
+      - camera_info:=${CAMERA_INFO_TOPIC:-/d455/camera/aligned_depth_to_color/camera_info}
 
   face_recognizer:
     image: pinto_model_zoo_ros2:humble
+    profiles: ["face_recognizer"]
     gpus: all
     network_mode: host
     environment:
@@ -53,6 +55,6 @@ services:
       - face_recognizer
       - --ros-args
       - -r
-      - image:=${COLOR_TOPIC:-/camera/color/image_raw}
+      - image:=${COLOR_TOPIC:-/d455/camera/color/image_raw}
       - -p
       - gallery_directory:=/faces

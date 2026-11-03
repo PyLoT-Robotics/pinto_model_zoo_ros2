@@ -18,12 +18,14 @@ DOWNLOAD_TIMEOUT_SECONDS = 120
 @dataclass(frozen=True)
 class ArchiveSpec:
     url: str
+    sha256: str  # of the archive itself (models/catalog.tsv)
     files: dict[str, str]  # file name inside the archive -> pinned sha256
 
 
 ARCHIVES = (
     ArchiveSpec(
         url=ZOO_URL + "488_DEIMv2-Wholebody49/resources.tar.gz",
+        sha256="5251780d7f75740b3a4bd2ef793613067440a80e89bdd49c0c5baf1b7d3ee601",
         files={
             "deimv2_hgnetv2_n_wholebody49_ins_s08_maskhead64x2_center_1240query.onnx":
                 "b02cae5f12ebaa7f57be35e5bd1b83e58273472c69b2eb87696954adae83a95c",
@@ -35,6 +37,7 @@ ARCHIVES = (
     ),
     ArchiveSpec(
         url=ZOO_URL + "502_PersonViT/resources_ain.tar.gz",
+        sha256="f9c76e475d8783120a60b0e2c5b0f767dfa2900f84656cfdcf9d62b47848b042",
         files={
             "osnet_ain_x1_0_p_unified_aug_n.onnx":
                 "0235656a0db94265491d0df90ebcbc3543c1dd61937a38b82eeebd31c76cb220",
@@ -42,6 +45,7 @@ ARCHIVES = (
     ),
     ArchiveSpec(
         url=ZOO_URL + "483_LVFace/resources.tar.gz",
+        sha256="00a00d9d7c838a94ed2ea2592833fa17c3861917b80ee8bdbdd29dbed94b61b4",
         files={
             "LVFace-T_Glint360K.onnx":
                 "6635071a23a06aca91ddfd87e3874c7ffd42fc41a39a50f833e943c88a59df91",
@@ -103,6 +107,12 @@ def main() -> int:
             archive_path = Path(temporary_directory) / "resources.tar.gz"
             print(f"Downloading {spec.url}")
             urllib.request.urlretrieve(spec.url, archive_path)
+            actual_sha256 = sha256_of(archive_path)
+            if actual_sha256 != spec.sha256:
+                raise ValueError(
+                    f"{spec.url}: sha256 {actual_sha256} != pinned {spec.sha256}. "
+                    "Upstream may have changed the archive; review, then update ARCHIVES."
+                )
             extract_verified_models(archive_path, spec.files, arguments.output_directory)
     model_count = sum(len(spec.files) for spec in ARCHIVES)
     print(f"Verified {model_count} models in {arguments.output_directory}")
