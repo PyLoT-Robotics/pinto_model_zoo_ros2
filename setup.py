@@ -16,6 +16,9 @@ setup(
     entry_points={
         "console_scripts": [
             f"wholebody_detector = {PACKAGE_NAME}.wholebody_detector_node:main",
+            f"person_tracker = {PACKAGE_NAME}.person_tracker_node:main",
+            f"face_recognizer = {PACKAGE_NAME}.face_recognizer_node:main",
+            f"evaluate_bag = {PACKAGE_NAME}.evaluate_bag:main",
         ],
     },
 )
