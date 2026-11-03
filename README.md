@@ -89,7 +89,7 @@ Nothing is computed while no one subscribes to either output.
 | `model_variant` | `n` | |
 | `face_model_file` | `LVFace-T_Glint360K.onnx` | |
 | `face_score_threshold` | `0.50` | |
-| `gallery_directory` | `/faces` | See `face_gallery` in `face_recognition.py` for the layout |
+| `gallery_directory` | `/faces` | Flat directory of images; the file name without suffix is the person name |
 | `rate_hz` | `5.0` | Must be positive |
 
 ## Running the tracker and face recognizer with compose
